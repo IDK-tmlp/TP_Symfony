@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,9 +13,9 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username')
-            ->add('text')
-            ->add('note')
+            ->add('username', TextType::class, ['label' => 'Pseudo'])
+            ->add('text', TextareaType::class, ['label' => 'Contenu de l\'article'])
+            ->add('note', NumberType::class)
             ->add('article')
         ;
     }

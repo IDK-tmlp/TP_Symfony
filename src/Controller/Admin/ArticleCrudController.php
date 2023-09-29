@@ -18,9 +18,9 @@ class ArticleCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('title');
-        yield TextareaField::new('text')->hideOnIndex();
-        yield AssociationField::new('category');
-        // yield ImageField::new('image')->setBasePath('uploads/images/')->setUploadDir('public/uploads/images/');
+        yield TextField::new('title', 'Titre');
+        yield TextareaField::new('text', 'Contenu')->hideOnIndex();
+        yield AssociationField::new('category', 'Catégorie');
+        yield ImageField::new('image')->setBasePath('uploads/images/')->setUploadDir('public/uploads/images/');
     }
 }

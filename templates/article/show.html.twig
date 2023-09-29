@@ -29,13 +29,21 @@
 				<th>Commentaire</th>
 				<td>
 					<ul>
-						{% for comment in article.comments %}
+						{% for comment in comments %}
+							{% if comment.isValidated %}
 								<li><a href="{{ path('app_article_show', {'id': comment.id}) }}">{{ comment }}</a></li>
-
+							{% endif %}
 						{% else %}
 							No articles
 						{% endfor %}
 					</ul>
+					{% if previous >= 0 %}
+						<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: previous }) }}">Précédent</a>
+					{% endif %}
+					Il y a {{ comments|length~' commentaire'~( comments|length > 1 ? 's' : '') }}
+					{% if next < comments|length %}
+						<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: next }) }}">Suivant</a>
+					{% endif %}
 				</td>
 			</tr>
 		</tbody>

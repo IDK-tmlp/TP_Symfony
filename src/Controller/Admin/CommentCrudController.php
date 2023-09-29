@@ -19,8 +19,8 @@ class CommentCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('username');
-        yield TextareaField::new('text')->hideOnIndex();
+        yield TextField::new('username', 'Pseudo');
+        yield TextareaField::new('text', 'Commentaire')->hideOnIndex();
         yield NumberField::new('note');
         yield AssociationField::new('article');
         yield BooleanField::new('isValidated');

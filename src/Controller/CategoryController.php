@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,13 +43,19 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_category_show', methods: ['GET'])]
-    public function show(Category $category): Response
+    #[Route('/show/{id}', name: 'app_category_show', methods: ['GET', 'POST'])]
+    public function show(Category $category, Request $request, ArticleRepository $articleRepository): Response
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $articleRepository->getArticlePaginator( $category, $offset);
         return $this->render('category/show.html.twig', [
             'category' => $category,
+            'articles' => $paginator,
+            'previous' => $offset - ArticleRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + ArticleRepository::PAGINATOR_PER_PAGE),
         ]);
     }
+
 
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response

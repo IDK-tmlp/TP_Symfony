@@ -7,6 +7,7 @@ use App\Entity\Category;
 use App\Form\ArticleType;
 use App\Form\ArticleTypeFromCategorie;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -80,11 +81,16 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
+    #[Route('/show/{id}', name: 'app_article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article, Request $request, CommentRepository $commentRepository): Response
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $commentRepository->getCommentPaginator( $article, $offset);
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'comments' => $paginator,
+            'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 

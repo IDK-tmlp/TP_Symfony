@@ -16,10 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Category::class);
-    }
+	public function __construct(ManagerRegistry $registry)
+	{
+		parent::__construct($registry, Category::class);
+	}
 
 //    /**
 //     * @return Category[] Returns an array of Category objects
@@ -35,6 +35,20 @@ class CategoryRepository extends ServiceEntityRepository
 //            ->getResult()
 //        ;
 //    }
+
+	public function getListTitle()
+	{
+		$titles = [];
+		foreach ($this->createQueryBuilder('c')
+			->select('c.title')
+			->distinct(true)
+			->orderBy('c.title', 'ASC')
+			->getQuery()
+			->getResult() as $cols) {
+			$titles[] = $cols['title'];
+		}
+		return $titles;
+	}
 
 //    public function findOneBySomeField($value): ?Category
 //    {

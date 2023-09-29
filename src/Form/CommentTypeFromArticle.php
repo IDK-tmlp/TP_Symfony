@@ -12,9 +12,9 @@ class CommentTypeFromArticle extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username')
-            ->add('text')
-            ->add('note')
+            ->add('username', TextType::class, ['label' => 'Pseudo'])
+            ->add('text', TextareaType::class, ['label' => 'Contenu de l\'article'])
+            ->add('note', NumberType::class)
         ;
     }
 
