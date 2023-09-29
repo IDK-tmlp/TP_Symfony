@@ -23,6 +23,10 @@ class Comment
     #[ORM\Column(nullable: true)]
     private ?int $note = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Article $article = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +64,18 @@ class Comment
     public function setNote(?int $note): static
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): static
+    {
+        $this->article = $article;
 
         return $this;
     }
