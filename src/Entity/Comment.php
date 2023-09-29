@@ -79,4 +79,11 @@ class Comment
 
         return $this;
     }
+    public function __toString():string
+    {
+        if ($this->note !== null) {
+            return $this->username.' rated this '.$this->note.' stars.';
+        }
+        return $this->username;
+    }
 }

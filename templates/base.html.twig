@@ -13,6 +13,11 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+            <a href="{{ path('app_category_index') }}" class="btn btn-primary">Go to Category</a>
+            <a href="{{ path('app_article_index') }}" class="btn btn-primary">Go to Article</a>
+            <a href="{{ path('app_comment_index') }}" class="btn btn-primary">Go to Comment</a>
+            <a href="{{ path('app_login') }}" class="btn btn-warning">Go to Login</a>
+        {% endblock %}
     </body>
 </html>

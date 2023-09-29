@@ -23,8 +23,8 @@
                 <td>{{ article.text }}</td>
                 <td>{{ article.image }}</td>
                 <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
+                    <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Show</a>
+                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
         {% else %}

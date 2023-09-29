@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Form\CommentTypeFromArticle;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,6 +36,27 @@ class CommentController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('comment/new.html.twig', [
+            'comment' => $comment,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_comment_new_with_id', methods: ['GET', 'POST'])]
+    public function newFromArticle(Request $request, EntityManagerInterface $entityManager, Article $article): Response
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentTypeFromArticle::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $article->addComment($comment);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_article_show',['id' => $article->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('comment/new.html.twig', [

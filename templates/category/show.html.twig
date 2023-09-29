@@ -3,24 +3,37 @@
 {% block title %}Category{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+	<h1>Category</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ category.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ category.title }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ category.id }}</td>
+			</tr>
+			<tr>
+				<th>Title</th>
+				<td>{{ category.title }}</td>
+			</tr>
+			<tr>
+				<th>Articles</th>
+				<td>
+					<ul>
+						{% for article in category.articles %}
+								<li><a href="{{ path('app_article_show', {'id': article.id}) }}">{{ article }}</a></li>
 
-    <a href="{{ path('app_category_index') }}">back to list</a>
+						{% else %}
+							No articles
+						{% endfor %}
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+	<a href="{{ path('app_category_index') }}" class="btn btn-primary">Back to list</a>
+	<a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary">Edit</a>
+	<a href="{{ path('app_article_new_with_id', {'id': category.id}) }}" class="btn btn-primary">Create article</a>
 
-    {{ include('category/_delete_form.html.twig') }}
+	{{ include('category/_delete_form.html.twig') }}
 {% endblock %}

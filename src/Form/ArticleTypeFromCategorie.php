@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 
-class ArticleType extends AbstractType
+class ArticleTypeFromCategorie extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -18,10 +18,11 @@ class ArticleType extends AbstractType
             ->add('text')
             ->add('image', FileType::class, [
                 'label'=>'Image', 
-                'mapped'=>false, /*to avoid convert string to file when editing*/
+                'mapped'=>true, 
                 'required'=>false, 
-                'constraints'=>[ new Image(['maxSize'=>'1024k'])]])
-            ->add('category')
+                'constraints'=>[
+                    new Image(['maxSize'=>'1024k'])
+                ]])
         ;
     }
 
