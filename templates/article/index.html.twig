@@ -21,7 +21,7 @@
                 <td>{{ article.id }}</td>
                 <td>{{ article.title }}</td>
                 <td>{{ article.text }}</td>
-                <td>{{ article.image }}</td>
+                <td><img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' alt="articleCover" width="70px" height="70px"/></td>
                 <td>
                     <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Show</a>
                     <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_article_new') }}">Create new</a>
+    <a href="{{ path('app_article_new') }}" class="btn btn-primary">Add Article</a>
 {% endblock %}

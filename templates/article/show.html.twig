@@ -3,32 +3,44 @@
 {% block title %}Article{% endblock %}
 
 {% block body %}
-    <h1>Article</h1>
+	<h1>Article</h1>
+	<a href="{{ path('app_article_index') }}" class="btn btn-primary">Back to list</a>
+	<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ article.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ article.title }}</td>
-            </tr>
-            <tr>
-                <th>Text</th>
-                <td>{{ article.text }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td><img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' alt="articleCover" /></td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ article.id }}</td>
+			</tr>
+			<tr>
+				<th>Title</th>
+				<td>{{ article.title }}</td>
+			</tr>
+			<tr>
+				<th>Text</th>
+				<td>{{ article.text }}</td>
+			</tr>
+			<tr>
+				<th>Image</th>
+				<td><img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' alt="articleCover" /></td>
+			</tr>
+			<tr>
+				<th>Commentaire</th>
+				<td>
+					<ul>
+						{% for comment in article.comments %}
+								<li><a href="{{ path('app_article_show', {'id': comment.id}) }}">{{ comment }}</a></li>
 
-    <a href="{{ path('app_article_index') }}" class="btn btn-primary">Back to list</a>
+						{% else %}
+							No articles
+						{% endfor %}
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
 
-    {{ include('article/_delete_form.html.twig') }}
+	{{ include('article/_delete_form.html.twig') }}
 {% endblock %}

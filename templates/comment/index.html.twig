@@ -12,21 +12,23 @@
                 <th>Username</th>
                 <th>Text</th>
                 <th>Note</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for comment in comments %}
-            <tr>
-                <td>{{ comment.id }}</td>
-                <td>{{ comment.username }}</td>
-                <td>{{ comment.text }}</td>
-                <td>{{ comment.note }}</td>
-                <td>
-                    <a href="{{ path('app_comment_show', {'id': comment.id}) }}" class="btn btn-primary">Show</a>
-                    <a href="{{ path('app_comment_edit', {'id': comment.id}) }}" class="btn btn-primary">Edit</a>
-                </td>
-            </tr>
+            {% if comment.isValidated %}
+                <tr>
+                    <td>{{ comment.id }}</td>
+                    <td>{{ comment.username }}</td>
+                    <td>{{ comment.text }}</td>
+                    <td>{{ comment.note }}</td>
+                    <td>
+                        <a href="{{ path('app_comment_show', {'id': comment.id}) }}" class="btn btn-primary">Show</a>
+                        <a href="{{ path('app_comment_edit', {'id': comment.id}) }}" class="btn btn-primary">Edit</a>
+                    </td>
+                </tr>
+            {% endif %}
         {% else %}
             <tr>
                 <td colspan="5">No records found</td>
@@ -35,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_comment_new') }}" class="btn btn-primary">Create new</a>
+    {# <a href="{{ path('app_comment_new') }}" class="btn btn-primary">Create new</a> #}
 {% endblock %}

@@ -27,6 +27,9 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isValidated = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -82,8 +85,23 @@ class Comment
     public function __toString():string
     {
         if ($this->note !== null) {
+            if ($this->note < 2) {
+                return $this->username.' rated this '.$this->note.' star.';
+            }
             return $this->username.' rated this '.$this->note.' stars.';
         }
-        return $this->username;
+        return $this->username." commented";
+    }
+
+    public function isIsValidated(): ?bool
+    {
+        return $this->isValidated;
+    }
+
+    public function setIsValidated(?bool $isValidated): static
+    {
+        $this->isValidated = $isValidated;
+
+        return $this;
     }
 }
