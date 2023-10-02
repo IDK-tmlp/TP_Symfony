@@ -31,7 +31,7 @@
 					<ul>
 						{% for comment in comments %}
 							{% if comment.isValidated %}
-								<li><a href="{{ path('app_article_show', {'id': comment.id}) }}">{{ comment }}</a></li>
+								<li><a href="{{ path('app_comment_show', {'id': comment.id}) }}">{{ comment }}</a></li>
 							{% endif %}
 						{% else %}
 							No articles
