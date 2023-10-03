@@ -1,41 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Comment index{% endblock %}
-
 {% block body %}
-    <h1>Comment index</h1>
+	<div class="card">
+		<div class="card-header">
+			Comment
+		</div>
+		{% for comment in comments %}
+			{% if comment.isValidated %}
+				<div class="card-body">
+					<blockquote class="blockquote mb-0">
+						<p>{{ comment.text }}</p>
+						<footer class="blockquote-footer"><cite title="{{ comment.username }}">{{ comment.username }}</cite> gave this a {{ comment.note }}</footer>
+					</blockquote>
+					<a href="{{ path('app_comment_show', {'id': comment.id}) }}" class="btn btn-primary">Show</a>
+					<a href="{{ path('app_comment_edit', {'id': comment.id}) }}" class="btn btn-primary">Edit</a>
+				</div>
+				<hr/>
+			{% endif %}
+		{% endfor %}
+		</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Username</th>
-                <th>Text</th>
-                <th>Note</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for comment in comments %}
-            {% if comment.isValidated %}
-                <tr>
-                    <td>{{ comment.id }}</td>
-                    <td>{{ comment.username }}</td>
-                    <td>{{ comment.text }}</td>
-                    <td>{{ comment.note }}</td>
-                    <td>
-                        <a href="{{ path('app_comment_show', {'id': comment.id}) }}" class="btn btn-primary">Show</a>
-                        <a href="{{ path('app_comment_edit', {'id': comment.id}) }}" class="btn btn-primary">Edit</a>
-                    </td>
-                </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <td colspan="5">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    {# <a href="{{ path('app_comment_new') }}" class="btn btn-primary">Create new</a> #}
+	{# <a href="{{ path('app_comment_new') }}" class="btn btn-primary">Create new</a> #}
 {% endblock %}

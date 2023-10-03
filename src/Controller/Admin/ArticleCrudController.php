@@ -21,6 +21,6 @@ class ArticleCrudController extends AbstractCrudController
         yield TextField::new('title', 'Titre');
         yield TextareaField::new('text', 'Contenu')->hideOnIndex();
         yield AssociationField::new('category', 'Catégorie');
-        yield ImageField::new('image')->setBasePath('uploads/images/')->setUploadDir('public/uploads/images/');
+        // yield ImageField::new('image')->setBasePath('uploads/images/')->setUploadDir('public/uploads/images/');
     }
 }
