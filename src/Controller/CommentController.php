@@ -23,6 +23,24 @@ class CommentController extends AbstractController
             'comments' => $commentRepository->findAll(),
         ]);
     }
+    
+    #[Route('/verify', name: 'app_comment_verify', methods: ['GET'])]
+    public function verify(CommentRepository $commentRepository): Response
+    {
+        return $this->render('comment/verify.html.twig', [
+            'comments' => $commentRepository->findAll(),
+        ]);
+    }
+    #[Route('/verify/{id}', name: 'app_comment_verifyAction', methods: ['GET'])]
+    public function verifyAction(CommentRepository $commentRepository, Comment $comment, EntityManagerInterface $entityManager): Response
+    {
+        $comment->setIsValidated(true);
+        $entityManager->persist($comment);
+        $entityManager->flush();
+        return $this->render('comment/verify.html.twig', [
+            'comments' => $commentRepository->findAll(),
+        ]);
+    }
 
     #[Route('/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -44,7 +62,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_comment_new_with_id', methods: ['GET', 'POST'])]
+    #[Route('/new/{id}', name: 'app_comment_new_with_id', methods: ['GET', 'POST'])]
     public function newFromArticle(Request $request, EntityManagerInterface $entityManager, Article $article): Response
     {
         $comment = new Comment();
@@ -65,7 +83,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_comment_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_comment_show', methods: ['GET'])]
     public function show(Comment $comment): Response
     {
         return $this->render('comment/show.html.twig', [

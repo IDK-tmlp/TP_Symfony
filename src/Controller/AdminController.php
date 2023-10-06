@@ -9,27 +9,48 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin')]
+#[Route('/user')]
 class AdminController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_index', methods: ['GET'])]
-    public function index(AdminRepository $adminRepository): Response
+    #[Route('/', name: 'app_admin_index', methods: ['GET', 'POST'])]
+    public function index(AdminRepository $adminRepository, Request $request): Response
     {
+        $role_search = '';
+        $name_search = '';
+        
+        if ( $request->request->get('role_search') !== null || $request->request->get('name_search')!== null ) {
+            $role_search = $request->request->get('role_search');
+            $name_search = $request->request->get('name_search');
+        }
+        
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $adminRepository->getAdminPaginator($role_search, $name_search, $offset);
         return $this->render('admin/index.html.twig', [
-            'admins' => $adminRepository->findAll(),
+            'roles' => $adminRepository->getListRole(),
+            'names' => $adminRepository->getListName(),
+            'admins' => $paginator,
+            'role_search'=> $role_search,
+            'name-search'=>$name_search,
         ]);
     }
 
     #[Route('/new', name: 'app_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(UserPasswordHasherInterface $passwordHasher, Request $request, EntityManagerInterface $entityManager): Response
     {
         $admin = new Admin();
         $form = $this->createForm(AdminType::class, $admin);
         $form->handleRequest($request);
 
+        $password=$request->request->get('admin_password_first'); // temp
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $hashedPassword = $passwordHasher->hashPassword(
+                $admin, $password
+            );
+            $admin->setPassword($hashedPassword);
             $entityManager->persist($admin);
             $entityManager->flush();
 

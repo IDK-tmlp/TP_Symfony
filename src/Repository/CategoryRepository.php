@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -50,6 +51,21 @@ class CategoryRepository extends ServiceEntityRepository
 		return $titles;
 	}
 
+	public const PAGINATOR_PER_PAGE = 5;
+    public function getCategoryPaginator(?string $title=null, int $offset): Paginator
+    {
+        $query = $this->createQueryBuilder('c');
+        if ($title !=='') {
+            $query->andWhere('c.title = :title')
+                ->setParameter('title', $title);
+        }
+        $query->orderBy('c.title', 'ASC')
+                ->setMaxResults(self::PAGINATOR_PER_PAGE)
+                ->setFirstResult($offset)
+                ->getQuery();
+        return new Paginator($query);
+    }
+	
 //    public function findOneBySomeField($value): ?Category
 //    {
 //        return $this->createQueryBuilder('c')

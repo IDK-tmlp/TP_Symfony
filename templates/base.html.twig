@@ -14,7 +14,6 @@
 	</head>
 	<body>
 		{% block header %}
-			
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 				<a href="{{ path('app_homepage') }}" class="navbar-brand">Home</a>
 				<div>
@@ -36,7 +35,42 @@
 				<a href="{{ path('app_login') }}" class="nav-link">Login</a>
 			</nav>
 		{% endblock %}
+
 		{% block body %}
+			<h1>Mon blog</h1>
+			<h2>Articles recents</h2>
+			<section class='d-flex flex-row flew-wrap gap-3'>
+				{% for article in recents %}
+					{% if not article.isPremium %}
+						<section class="card text-center" style="width: 20%">
+							<img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' class="card-img-top" alt="articleCover" width="80px" height="200px">
+							<div class="card-body">
+								<h5 class="card-title">{{ article.title }}</h5>
+								<p class="card-text">{{ article.text }}</p>
+								<a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">See more</a>
+								<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
+							</div>
+						</section>
+					{% endif %}
+				{% endfor %}
+			</section>
+			<div>
+				<h2>Demander a changer de role</h2>
+				<a href="{{ path('app_admin_index') }}" class="btn btn-primary">Users</a>
+			</div>
+			<div>
+				<h2>Rechercher un article</h2>
+				<form action='{{ path('app_article_index')}}' method='POST'>
+					<div class="form-group w-25">
+						<label for="title" class="">Rechercher un article</label>
+						<input type='text' name='title'/>
+					</div>
+					<div>
+						<input type="submit" name="submit" value="Search"/>
+					</div>
+				</form>
+			</div>
+			
 		{% endblock %}
 
 	</body>

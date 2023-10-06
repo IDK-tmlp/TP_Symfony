@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Category index</h1>
+    <a href="{{ path('app_category_new') }}" class="btn btn-primary">Create new</a>
 
     <table class="table">
         <thead>
@@ -31,5 +32,23 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_category_new') }}" class="btn btn-primary">Create new</a>
+    <form action='{{ path('app_category_index')}}' method='POST'>
+	<h4 class="m0">Search a specific category</h4>
+	{# Title #}
+		<div class="form-group w-25">
+			<label for="title" class="">Category</label>
+			<div class="">
+				<select class="form-control" id="title_search" name="title_search">
+					<option {{ (title_search == '' ? 'selected') }}></option>
+					{% for title in titles %}
+					<option {{ (title_search == title ? 'selected') }}>{{ title }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+		<div>
+			<input type="submit" name="submit" value="Search"/>
+		</div>
+	</form>
+
 {% endblock %}

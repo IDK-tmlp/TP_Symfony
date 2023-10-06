@@ -23,7 +23,7 @@ class CommentRepository extends ServiceEntityRepository
 		parent::__construct($registry, Comment::class);
 	}
 
-	public const PAGINATOR_PER_PAGE = 2;
+	public const PAGINATOR_PER_PAGE = 5;
 	public function getCommentPaginator(Article $article, int $offset): Paginator
 	{
 		$query = $this->createQueryBuilder('c')

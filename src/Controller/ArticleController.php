@@ -7,6 +7,7 @@ use App\Entity\Category;
 use App\Form\ArticleType;
 use App\Form\ArticleTypeFromCategorie;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +19,25 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
-    #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+    #[Route('/', name: 'app_article_index', methods: ['GET', 'POST'])]
+    public function index(ArticleRepository $articleRepository, CategoryRepository $categoryRepository, Request $request): Response
     {
+        $titles = $categoryRepository->getListTitle();
+        $title_search = '';
+        $offset = max(0, $request->query->getInt('offset', 0));
+        if ( $request->request->get('title_search') !== null ) {
+            $title_search = $request->request->get('title_search');
+            $title_search = $categoryRepository->findOneBy(['title' => $title_search]);
+            $paginator = $articleRepository->getArticlePaginator($title_search, $offset);
+        }else {
+            $paginator = $articleRepository->findAll();
+        }
+
+
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $paginator,
+            'title_search' => $title_search,
+            'titles' => $titles,
         ]);
     }
 
@@ -128,5 +143,17 @@ class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/delete/picture/{id}', name: 'app_article_delete_picture', methods: ['GET'])]
+    public function deletePicture(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+    {
+        $filename = $article->getImage();
+        // handle delete
+        $article->setImage('default.png');
+        $entityManager->persist($article);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_article_show',['id' => $article->getId()], Response::HTTP_SEE_OTHER);
     }
 }

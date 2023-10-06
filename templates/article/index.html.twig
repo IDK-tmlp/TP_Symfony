@@ -3,19 +3,70 @@
 {% block title %}Article index{% endblock %}
 
 {% block body %}
-    <h1>Article index</h1>
-    <a href="{{ path('app_article_new') }}" class="btn btn-primary">Add Article</a>
-    <section class='d-flex flex-row flew-wrap gap-3'>
-        {% for article in articles %}
-            <section class="card text-center" style="width: 30%">
-                <img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' class="card-img-top" alt="articleCover" width="80px" height="200px">
-                <div class="card-body">
-                    <h5 class="card-title">{{ article.title }}</h5>
-                    <p class="card-text">{{ article.text }}</p>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">See more</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
-                </div>
-            </section>
-        {% endfor %}
-    </section>
+	<h1>Articles</h1>
+	<a href="{{ path('app_article_new') }}" class="btn btn-primary">Write new Article</a>
+
+	<form action='{{ path('app_article_index')}}' method='POST'>
+		<h4 class="m0">Search a specific category</h4>
+		{# Title #}
+		<div class="form-group w-25">
+			<label for="title" class="">Category</label>
+			<div class="">
+				<select class="form-control" id="title_search" name="title_search">
+					<option {{ (title_search == '' ? 'selected') }}></option>
+					{% for title in titles %}
+					<option {{ (title_search == title ? 'selected') }}>{{ title }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+		<div>
+			<input type="submit" name="submit" value="Search"/>
+		</div>
+	</form>
+
+	<h2>Free Articles</h2>
+	<section class='d-flex flex-row flew-wrap gap-3'>
+		{% for article in articles %}
+			{% if article.isPremium != true %}
+				<section class="card text-center" style="width: 20%">
+					<img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' class="card-img-top" alt="articleCover" width="80px" height="200px">
+					<div class="card-body">
+						<h5 class="card-title">{{ article.title }}</h5>
+						{% if article.text|length >= 100 %}
+							<p class="card-text">{{ article.text[:100] }} ...</p>
+						{% else %}
+							<p class="card-text">{{ article.text }}</p>
+						{% endif %}
+						<a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">See more</a>
+						<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
+					</div>
+				</section>
+			{% endif %}
+		{% endfor %}
+	</section>
+
+	{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
+		<h2>Premium Articles</h2>
+		<section class='d-flex flex-row flew-wrap gap-3'>
+			{% for article in articles %}
+				{% if article.isPremium %}
+					<section class="card text-center" style="width: 20%">
+						<img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' class="card-img-top" alt="articleCover" width="80px" height="200px">
+						<div class="card-body">
+							<h5 class="card-title">{{ article.title }}</h5>
+							{% if article.text|length >= 100 %}
+								<p class="card-text">{{ article.text[:100] }} ...</p>
+							{% else %}
+								<p class="card-text">{{ article.text }}</p>
+							{% endif %}
+							<a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">See more</a>
+							<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
+						</div>
+					</section>
+				{% endif %}
+			{% endfor %}
+		</section>
+	{% endif %}
+
 {% endblock %}

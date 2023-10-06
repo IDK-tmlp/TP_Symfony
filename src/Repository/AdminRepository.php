@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Admin;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,6 +38,45 @@ class AdminRepository extends ServiceEntityRepository implements PasswordUpgrade
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function getListRole()
+	{
+		$roles = ['ROLE_USER', 'ROLE_AUTHOR', 'ROLE_PREMIUM', 'ROLE_MODO', 'ROLE_ADMIN'];
+		return $roles;
+	}
+
+    public function getListName()
+    {
+        $names = [];
+        foreach ($this->createQueryBuilder('c')
+            ->select('c.username')
+            ->distinct(true)
+            ->orderBy('c.username', 'ASC')
+            ->getQuery()
+            ->getResult() as $cols) {
+            $names[] = $cols['username'];
+        }
+        return $names;
+    }
+
+    public const PAGINATOR_PER_PAGE = 5;
+    public function getAdminPaginator(?string $role=null, ?string $name=null, int $offset): Paginator
+    {
+        $query = $this->createQueryBuilder('c');
+        if ($role !=='') {
+            $query->andWhere('c.roles = :role')
+                ->setParameter('role', $role);
+        }
+        if ($name!== '') {
+            $query->andWhere('c.username = :name')
+                ->setParameter('name', $name);
+        }
+        $query->orderBy('c.username', 'ASC')
+                ->setMaxResults(self::PAGINATOR_PER_PAGE)
+                ->setFirstResult($offset)
+                ->getQuery();
+        return new Paginator($query);
     }
 
 //    /**

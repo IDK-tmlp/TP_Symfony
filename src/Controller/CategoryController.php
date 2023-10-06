@@ -15,11 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'app_category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    #[Route('/', name: 'app_category_index', methods: ['GET', 'POST'])]
+    public function index(CategoryRepository $categoryRepository, Request $request): Response
     {
+        $titles = $categoryRepository->getListTitle();
+        $title_search = '';
+        if ( $request->request->get('title_search') !== null ) {
+            $title_search = $request->request->get('title_search');
+        }
+
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $categoryRepository->getCategoryPaginator( $title_search, $offset);
         return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'title_search' => $title_search,
+            'titles' => $titles,
+            'categories' => $paginator,
         ]);
     }
 
