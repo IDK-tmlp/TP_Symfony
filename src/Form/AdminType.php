@@ -26,7 +26,7 @@ class AdminType extends AbstractType
                 ],
                 'multiple' => true,
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Password', 'hash_property_path' => 'password'],
                 'second_options' => ['label' => 'Repeat Password'],

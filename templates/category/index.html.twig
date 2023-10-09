@@ -9,7 +9,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Title</th>
                 <th>actions</th>
             </tr>
@@ -17,7 +16,6 @@
         <tbody>
         {% for category in categories %}
             <tr>
-                <td>{{ category.id }}</td>
                 <td>{{ category.title }}</td>
                 <td>
                     <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-primary">Show</a>
@@ -32,9 +30,9 @@
         </tbody>
     </table>
 
+    {# 
     <form action='{{ path('app_category_index')}}' method='POST'>
 	<h4 class="m0">Search a specific category</h4>
-	{# Title #}
 		<div class="form-group w-25">
 			<label for="title" class="">Category</label>
 			<div class="">
@@ -49,6 +47,7 @@
 		<div>
 			<input type="submit" name="submit" value="Search"/>
 		</div>
-	</form>
+	</form> 
+    #}
 
 {% endblock %}

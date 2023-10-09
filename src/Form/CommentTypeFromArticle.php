@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CommentTypeFromArticle extends AbstractType
@@ -13,7 +16,7 @@ class CommentTypeFromArticle extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['label' => 'Pseudo'])
-            ->add('text', TextareaType::class, ['label' => 'Contenu de l\'article'])
+            ->add('text', TextareaType::class, ['label' => 'Commentaire'])
             ->add('note', NumberType::class)
         ;
     }

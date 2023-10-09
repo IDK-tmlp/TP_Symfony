@@ -24,20 +24,13 @@ class CommentController extends AbstractController
         ]);
     }
     
-    #[Route('/verify', name: 'app_comment_verify', methods: ['GET'])]
-    public function verify(CommentRepository $commentRepository): Response
-    {
-        return $this->render('comment/verify.html.twig', [
-            'comments' => $commentRepository->findAll(),
-        ]);
-    }
     #[Route('/verify/{id}', name: 'app_comment_verifyAction', methods: ['GET'])]
     public function verifyAction(CommentRepository $commentRepository, Comment $comment, EntityManagerInterface $entityManager): Response
     {
         $comment->setIsValidated(true);
         $entityManager->persist($comment);
         $entityManager->flush();
-        return $this->render('comment/verify.html.twig', [
+        return $this->render('comment/index.html.twig', [
             'comments' => $commentRepository->findAll(),
         ]);
     }

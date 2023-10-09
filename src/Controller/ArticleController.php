@@ -12,6 +12,7 @@ use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,10 +30,13 @@ class ArticleController extends AbstractController
             $title_search = $request->request->get('title_search');
             $title_search = $categoryRepository->findOneBy(['title' => $title_search]);
             $paginator = $articleRepository->getArticlePaginator($title_search, $offset);
+        }else if($request->request->get('title') !== null) {
+            $names = $articleRepository->findByTitle($request->request->get('title'));
+            var_dump($names);
+            $paginator = $names;
         }else {
             $paginator = $articleRepository->findAll();
         }
-
 
         return $this->render('article/index.html.twig', [
             'articles' => $paginator,
@@ -116,6 +120,17 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // If file input vide, on prends les memes et on recommence
+            $filename = $article->getImage();
+            if ($filename !== 'default.png'){
+                $filesystem = new Filesystem();
+                $filesystem->remove($photodir.'/'.$filename);
+                $article->setImage('default.png');
+                $entityManager->persist($article);
+                $entityManager->flush();
+            }
+
             $entityManager->flush();
             if ($image = $form['image']->getData()) {
                 $filename=$article->getId().'.'.$image->guessExtension();
@@ -146,13 +161,19 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/delete/picture/{id}', name: 'app_article_delete_picture', methods: ['GET'])]
-    public function deletePicture(Request $request, Article $article, EntityManagerInterface $entityManager): Response
+    public function deletePicture(Request $request, Article $article, EntityManagerInterface $entityManager, #[Autowire('%photo_dir%')] string $photodir): Response
     {
-        $filename = $article->getImage();
         // handle delete
-        $article->setImage('default.png');
-        $entityManager->persist($article);
-        $entityManager->flush();
+        
+        $filename = $article->getImage();
+        if ($filename !== 'default.png'){
+            $filesystem = new Filesystem();
+            $filesystem->remove($photodir.'/'.$filename);
+            $article->setImage('default.png');
+            $entityManager->persist($article);
+            $entityManager->flush();
+        }
+
 
         return $this->redirectToRoute('app_article_show',['id' => $article->getId()], Response::HTTP_SEE_OTHER);
     }

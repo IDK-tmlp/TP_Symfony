@@ -65,8 +65,8 @@ class AdminRepository extends ServiceEntityRepository implements PasswordUpgrade
     {
         $query = $this->createQueryBuilder('c');
         if ($role !=='') {
-            $query->andWhere('c.roles = :role')
-                ->setParameter('role', $role);
+            $query->andWhere('c.roles LIKE :role')
+                ->setParameter('role', '%'.$role.'%');
         }
         if ($name!== '') {
             $query->andWhere('c.username = :name')

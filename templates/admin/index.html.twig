@@ -14,7 +14,7 @@
 				<select class="form-control" id="role_search" name="role_search">
 					<option {{ (role_search == '' ? 'selected') }}></option>
 					{% for role in roles %}
-					<option {{ (role_search == role ? 'selected') }}>{{ role }}</option>
+					<option {{ (role_search == role ? 'selected') }} value='{{role}}'>{{ role }}</option>
 					{% endfor %}
 				</select>
 			</div>

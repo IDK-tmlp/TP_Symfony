@@ -20,6 +20,7 @@ class AdminController extends AbstractController
     {
         $role_search = '';
         $name_search = '';
+       
         
         if ( $request->request->get('role_search') !== null || $request->request->get('name_search')!== null ) {
             $role_search = $request->request->get('role_search');
@@ -44,13 +45,8 @@ class AdminController extends AbstractController
         $form = $this->createForm(AdminType::class, $admin);
         $form->handleRequest($request);
 
-        $password=$request->request->get('admin_password_first'); // temp
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword(
-                $admin, $password
-            );
-            $admin->setPassword($hashedPassword);
             $entityManager->persist($admin);
             $entityManager->flush();
 

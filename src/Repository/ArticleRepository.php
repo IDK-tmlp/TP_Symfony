@@ -35,6 +35,7 @@ class ArticleRepository extends ServiceEntityRepository
                 ->setMaxResults(self::PAGINATOR_PER_PAGE)
                 ->setFirstResult($offset)
                 ->getQuery();
+        dd($query->getDQL());
         return new Paginator($query);
 	}
 
@@ -42,8 +43,7 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->where('c.title = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
+            ->setParameter('val', "%$value%")
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
