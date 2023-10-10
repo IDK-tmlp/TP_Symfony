@@ -23,6 +23,7 @@ class ArticleType extends AbstractType
                 'mapped'=>false, /*to avoid convert string to file when editing*/
                 'required'=>false, 
                 'constraints'=>[ new Image(['maxSize'=>'1024k'])]])
+            ->add('isPremium')
             ->add('category')
         ;
     }

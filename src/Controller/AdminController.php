@@ -39,7 +39,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_new', methods: ['GET', 'POST'])]
-    public function new(UserPasswordHasherInterface $passwordHasher, Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $admin = new Admin();
         $form = $this->createForm(AdminType::class, $admin);

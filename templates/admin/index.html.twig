@@ -6,7 +6,7 @@
     <div class='d-flex justify-content-center gap-4 align-items-center'>
         <h1>User list</h1>
         <a href="{{ path('app_admin_new') }}" class="btn btn-primary fs-4 pt-0">+</a>
-    </div
+    </div>
 
     <form action='{{ path('app_admin_index')}}' method='POST'>
 		<h4 class="m0">Search a specific roles (or user)</h4>
@@ -33,7 +33,7 @@
                 <th>Id</th>
                 <th>Username</th>
                 <th>Roles</th>
-                <th>Password</th>
+                {# <th>Password</th> #}
                 <th>actions</th>
             </tr>
         </thead>
@@ -43,7 +43,7 @@
                 <td>{{ admin.id }}</td>
                 <td>{{ admin.username }}</td>
                 <td>{{ admin.roles ? admin.roles|json_encode : '' }}</td>
-                <td>{{ admin.password }}</td>
+                {# <td>{{ admin.password }}</td> #}
                 <td>
                     <a href="{{ path('app_admin_show', {'id': admin.id}) }}" class="btn btn-primary">Show</a>
                     <a href="{{ path('app_admin_edit', {'id': admin.id}) }}" class="btn btn-primary">Edit</a>

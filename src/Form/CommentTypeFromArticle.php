@@ -17,7 +17,9 @@ class CommentTypeFromArticle extends AbstractType
         $builder
             ->add('username', TextType::class, ['label' => 'Pseudo'])
             ->add('text', TextareaType::class, ['label' => 'Commentaire'])
-            ->add('note', NumberType::class)
+            ->add('note', NumberType::class, [
+                'required'   => false,
+                'empty_data' => null,])
         ;
     }
 

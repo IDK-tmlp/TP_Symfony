@@ -10,12 +10,21 @@
 				<div class="card-body">
 					<blockquote class="blockquote mb-0">
 						<p>{{ comment.text }}</p>
-						<footer class="blockquote-footer"><cite title="{{ comment.username }}">{{ comment.username }}</cite> gave this a {{ comment.note }}</footer>
+						<footer class="blockquote-footer"><cite title="{{ comment.username }}">{{ comment.username }}</cite>
+							{% if comment.note %}
+							gave this a {{ comment.note }}
+							{% endif %}
+						 </footer>
 					</blockquote>
 					<a href="{{ path('app_comment_verifyAction', {'id': comment.id}) }}" class="btn btn-primary">Verify</a>
 				</div>
-				<hr/>
 			{% endif %}
+		{% else %}
+			<div class="card-body">
+					<blockquote class="blockquote mb-0">
+						<p>Pas de commentaires a vérifier</p>
+					</blockquote>
+			</div>
 		{% endfor %}
 	</section>
 
@@ -28,11 +37,14 @@
 				<div class="card-body">
 					<blockquote class="blockquote mb-0">
 						<p>{{ comment.text }}</p>
-						<footer class="blockquote-footer"><cite title="{{ comment.username }}">{{ comment.username }}</cite> gave this a {{ comment.note }}</footer>
+						<footer class="blockquote-footer"><cite title="{{ comment.username }}">{{ comment.username }}</cite>
+							{% if comment.note %}
+								gave this a {{ comment.note }}
+							{% endif %}
+						</footer>
 					</blockquote>
 					{{ include('comment/_delete_form.html.twig') }}
 				</div>
-				<hr/>
 			{% endif %}
 		{% endfor %}
 	</section>

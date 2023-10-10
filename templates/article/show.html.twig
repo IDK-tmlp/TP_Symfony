@@ -7,12 +7,14 @@
 		<div class='d-flex justify-content-center gap-4 align-items-center'>
 			<a href="{{ path('app_article_index') }}" class="btn btn-primary"> < </a>
 			<h1>{{ article.title }}</h1>
-			<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
-			{{ include('article/_delete_form.html.twig') }}
+			{% if is_granted('ROLE_AUTHOR') %}
+				<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
+				{{ include('article/_delete_form.html.twig') }}
+			{% endif %}
 		</div>
 
 		<section class='m-2'>
-			<div class='d-flex gap-3 m-2 justify-content-center'>
+			<div class='d-flex gap-3 m-2 justify-content-center p-2'>
 				<img src='http://127.0.0.1:8000/uploads/images/{{ article.image }}' alt="articleCover" width='400px' height='400px' />
 				<div>
 					<p class='fs-4'>{{ article.text }}</p>
@@ -21,6 +23,13 @@
 		</section>
 			<section class='m-2'>
 				<h2>Commentaires</h2>
+				{% if previous >= 0 %}
+					<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: previous }) }}">Précédent</a>
+				{% endif %}
+				Il y a {{ comments|length~' commentaire'~( comments|length > 1 ? 's' : '') }}
+				{% if next < comments|length %}
+					<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: next }) }}">Suivant</a>
+				{% endif %}
 				{% if app.user %}
 					<a href="{{ path('app_comment_new_with_id', {'id': article.id}) }}) }}" class="btn btn-primary">Leave a comment</a>
 				{% else %}
@@ -49,17 +58,8 @@
 								</div>
 							</li>
 						{% endif %}
-					{% else %}
-						No articles
 					{% endfor %}
 				</ul>
-				{% if previous >= 0 %}
-					<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: previous }) }}">Précédent</a>
-				{% endif %}
-				Il y a {{ comments|length~' commentaire'~( comments|length > 1 ? 's' : '') }}
-				{% if next < comments|length %}
-					<a class="btn btn-sm btn-primary" href="{{ path('app_article_show', { id: article.id, offset: next }) }}">Suivant</a>
-				{% endif %}
 			</section>
 	</div>
 {% endblock %}
