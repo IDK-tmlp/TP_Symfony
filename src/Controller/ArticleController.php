@@ -120,26 +120,20 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // If file input vide, on prends les memes et on recommence
             $filename = $article->getImage();
-            if ($filename !== 'default.png'){
-                $filesystem = new Filesystem();
-                $filesystem->remove($photodir.'/'.$filename);
-                $article->setImage('default.png');
-                $entityManager->persist($article);
-                $entityManager->flush();
-            }
 
             $entityManager->flush();
             if ($image = $form['image']->getData()) {
                 $filename=$article->getId().'.'.$image->guessExtension();
                 $image->move($photodir, $filename);
                 $article->setImage($filename);
-                $entityManager->persist($article);
-                $entityManager->flush();
+            }else if ($filename !== 'default.png'){
+                    $filesystem = new Filesystem();
+                    $filesystem->remove($photodir.'/'.$filename);
+                    $article->setImage('default.png');
             }
-
+            $entityManager->persist($article);
+            $entityManager->flush();
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 

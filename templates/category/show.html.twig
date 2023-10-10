@@ -3,44 +3,39 @@
 {% block title %}Category{% endblock %}
 
 {% block body %}
-	<h1>Category</h1>
+	<div class='m-2'>
+		<div class='d-flex justify-content-center gap-4 align-items-center'>
+			<a href="{{ path('app_category_index') }}" class="btn btn-primary"><</a>
+			<h1 class='text-center'>{{ category.title }}</h1>
+		</div>
+		<div class='m-2'>
+			<ul class="list-group rounded m-2">
+				{% for article in articles %}
+					<li class='list-group-item d-flex justify-content-between bg-light'>
+						<a href="{{ path('app_article_show', {'id': article.id}) }}" class='text-decoration-none text-dark'>{{ article }}</a>
+					</li>
+				{% else %}
+					No articles
+				{% endfor %}
+			</ul>
+			{% if previous >= 0 %}
+				<a class="btn btn-sm btn-primary" href="{{ path('app_category_show', { id: category.id, offset: previous }) }}">Précédent</a>
+			{% endif %}
+				{{ articles|length~' article'~( articles|length > 1 ? 's' : '') }} dans cette catégorie.
+			{% if next < articles|length %}
+				<a class="btn btn-sm btn-primary" href="{{ path('app_category_show', { id: category.id, offset: next }) }}">Suivant</a>
+			{% endif %}
+		</div>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ category.id }}</td>
-			</tr>
-			<tr>
-				<th>Title</th>
-				<td>{{ category.title }}</td>
-			</tr>
-			<tr>
-				<th>Articles</th>
-				<td>
-					<ul>
-						{% for article in articles %}
-								<li><a href="{{ path('app_article_show', {'id': article.id}) }}">{{ article }}</a></li>
+		<div class='d-flex gap-3 m-2'>
+		{% if is_granted('ROLE_AUTHOR') %}
+			<a href="{{ path('app_article_new_with_id', {'id': category.id}) }}" class="btn btn-primary">Create article</a>
+		{% endif %}
+		{% if is_granted('ROLE_ADMIN') %}
+			{{ include('category/_delete_form.html.twig') }}
+		{% endif %}
+			
+		</div>
+	</div>
 
-						{% else %}
-							No articles
-						{% endfor %}
-					</ul>
-					{% if previous >= 0 %}
-						<a class="btn btn-sm btn-primary" href="{{ path('app_category_show', { id: category.id, offset: previous }) }}">Précédent</a>
-					{% endif %}
-					Il y a {{ articles|length~' article'~( articles|length > 1 ? 's' : '') }}
-					{% if next < articles|length %}
-						<a class="btn btn-sm btn-primary" href="{{ path('app_category_show', { id: category.id, offset: next }) }}">Suivant</a>
-					{% endif %}
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<a href="{{ path('app_category_index') }}" class="btn btn-primary">Back to list</a>
-	<a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary">Edit</a>
-	<a href="{{ path('app_article_new_with_id', {'id': category.id}) }}" class="btn btn-primary">Create article</a>
-
-	{{ include('category/_delete_form.html.twig') }}
 {% endblock %}

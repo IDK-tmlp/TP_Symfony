@@ -3,8 +3,10 @@
 {% block title %}Article index{% endblock %}
 
 {% block body %}
-	<h1>Articles</h1>
-	<a href="{{ path('app_article_new') }}" class="btn btn-primary">Write new Article</a>
+	<div class='d-flex justify-content-center gap-4 align-items-center'>
+		<h1>Articles</h1>
+		<a href="{{ path('app_article_new') }}" class="btn btn-primary fs-4 pt-0">+</a>
+	</div
 
 	<form action='{{ path('app_article_index')}}' method='POST'>
 		<h4 class="m0">Search a specific category</h4>

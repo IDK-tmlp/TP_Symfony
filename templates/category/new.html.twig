@@ -3,9 +3,13 @@
 {% block title %}New Category{% endblock %}
 
 {% block body %}
-    <h1>Create new Category</h1>
+    <div class='d-flex align-items-center flex-column'>
+        <div class='d-flex justify-content-center gap-4 align-items-center'>
+            <a href="{{ path('app_category_index') }}" class="btn btn-primary"> < </a>
+            <h1>Create new category</h1>
+		</div>
 
-    {{ include('category/_form.html.twig') }}
+        {{ include('category/_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_category_index') }}" class="btn btn-primary">Back to list</a>
 {% endblock %}

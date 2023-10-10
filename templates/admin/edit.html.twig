@@ -3,11 +3,14 @@
 {% block title %}Edit Admin{% endblock %}
 
 {% block body %}
-    <h1>Edit Admin</h1>
+    <div class='d-flex align-items-center flex-column'>
+        <div class='d-flex justify-content-center gap-4 align-items-center'>
+            <a href="{{ path('app_admin_index') }}" class="btn btn-primary"> < </a>
+            <h1>Edit Admin</h1>
+            {{ include('admin/_delete_form.html.twig') }}
+        </div>
 
-    {{ include('admin/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('admin/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 
-    <a href="{{ path('app_admin_index') }}" class="btn btn-primary">Back to list</a>
-
-    {{ include('admin/_delete_form.html.twig') }}
 {% endblock %}

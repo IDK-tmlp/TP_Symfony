@@ -3,9 +3,12 @@
 {% block title %}New Comment{% endblock %}
 
 {% block body %}
-    <h1>Create new Comment</h1>
+    <div class='d-flex align-items-center flex-column'>
+        <div class='d-flex justify-content-center gap-4 align-items-center'>
+            <a href="{{ path('app_comment_index') }}" class="btn btn-primary"> < </a>
+            <h1>Create new Comment</h1>
+        </div>
 
-    {{ include('comment/_form.html.twig') }}
-
-    <a href="{{ path('app_comment_index') }}" class="btn btn-primary">Back to list</a>
+        {{ include('comment/_form.html.twig') }}
+    </div>
 {% endblock %}

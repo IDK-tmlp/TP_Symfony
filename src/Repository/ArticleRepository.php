@@ -35,7 +35,6 @@ class ArticleRepository extends ServiceEntityRepository
                 ->setMaxResults(self::PAGINATOR_PER_PAGE)
                 ->setFirstResult($offset)
                 ->getQuery();
-        dd($query->getDQL());
         return new Paginator($query);
 	}
 

@@ -3,10 +3,13 @@
 {% block title %}Admin index{% endblock %}
 
 {% block body %}
-    <h1>Admin index</h1>
+    <div class='d-flex justify-content-center gap-4 align-items-center'>
+        <h1>User list</h1>
+        <a href="{{ path('app_admin_new') }}" class="btn btn-primary fs-4 pt-0">+</a>
+    </div
 
     <form action='{{ path('app_admin_index')}}' method='POST'>
-		<h4 class="m0">Search a specific User or roles</h4>
+		<h4 class="m0">Search a specific roles (or user)</h4>
 		{# Title #}
 		<div class="form-group w-25">
 			<label for="roles" class="">Roles</label>
@@ -54,5 +57,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_new') }}" class="btn btn-primary">Create new</a>
 {% endblock %}
