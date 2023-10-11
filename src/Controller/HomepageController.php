@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class HomepageController extends AbstractController
 {
@@ -41,5 +43,17 @@ class HomepageController extends AbstractController
             'admin' => $admin,
             'form' => $form,
         ]);
+    }
+
+    public function sendEmail(MailerInterface $mailer)
+    {
+        $email = (new Email())
+            ->from('your@email.com')
+            ->to('recipient@email.com')
+            ->subject('Sujet de l\'e-mail')
+            ->text('Contenu du message.');
+
+        $mailer->send($email);
+
     }
 }
