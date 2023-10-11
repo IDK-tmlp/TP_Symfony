@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Admin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,7 +26,8 @@ class AdminType extends AbstractType
                     'ADMIN' => 'ROLE_ADMIN',
                 ],
                 'multiple' => true,
-            ])
+                ])
+            ->add('email', EmailType::class, ['required'=>'false'])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Password', 'hash_property_path' => 'password'],

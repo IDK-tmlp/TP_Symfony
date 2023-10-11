@@ -15,6 +15,7 @@ class AdminRegisterType extends AbstractType
     {
         $builder
             ->add('username')
+            ->add('email', EmailType::class, ['required'=>'false'])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Password', 'hash_property_path' => 'password'],

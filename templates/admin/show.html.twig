@@ -17,6 +17,10 @@
                 <td>{{ admin.username }}</td>
             </tr>
             <tr>
+                <th>Mail</th>
+                <td>{{ admin.email }}</td>
+            </tr>
+            <tr>
                 <th>Roles</th>
                 <td>{{ admin.roles ? admin.roles|json_encode : '' }}</td>
             </tr>
@@ -26,6 +30,45 @@
             </tr> #}
         </tbody>
     </table>
+
+    <div class="d-flex flex-column align-items-center gap-3 ">
+                <div class='container'>
+                    <div class='d-flex justify-content-center gap-4 align-items-center'>
+                        <h1>Articles</h1>
+                    </div>
+                    <ul class="list-group">
+                    {% for article in admin.articles %}
+                        <a href="{{ path('app_article_show', {'id': article.id}) }}" class='text-decoration-none text-dark'>
+                            <li class='list-group-item d-flex justify-content-between'>
+                                {{ article.title }}
+                                <span class="pull-right">{{ article.createdAt|date('d-m-Y') }}</span>
+                            </li>
+                        </a>
+                    {% else %}
+                        <li class='list-group-item'>
+                            <p>Cet utilisateur n'a pas encore écrit d'articles</p>
+                        </li>
+                    {% endfor %}
+                </div>
+                <div class='container'>
+                    <div class='d-flex justify-content-center gap-4 align-items-center'>
+                        <h1>Commentaires</h1>
+                    </div>
+                    <ul class="list-group">
+                    {% for comment in admin.comments %}
+                        <a href="{{ path('app_article_show', {'id': comment.article.id}) }}" class='text-decoration-none text-dark'>
+                            <li class='list-group-item d-flex justify-content-between'>
+                                {{ comment.text }}
+                                <span class="pull-right">{{ comment.createdAt|date('d-m-Y') }}</span>
+                            </li>
+                        </a>
+                    {% else %}
+                        <li class='list-group-item'>
+                            <p>Cet utilisateur n'a pas encore écrit de commentaires</p>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
 
 
 {% endblock %}

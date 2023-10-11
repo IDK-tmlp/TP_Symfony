@@ -37,7 +37,7 @@
                     <div class='d-flex justify-content-center gap-4 align-items-center'>
                         <h1>Vos commentaires</h1>
                     </div>
-                    <ul class="list-group"'>
+                    <ul class="list-group">
                     {% for comment in app.user.comments %}
                         <a href="{{ path('app_article_show', {'id': comment.article.id}) }}" class='text-decoration-none text-dark'>
                             <li class='list-group-item d-flex justify-content-between'>

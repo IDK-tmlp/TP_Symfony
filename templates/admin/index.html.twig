@@ -27,6 +27,7 @@
         <thead>
             <tr>
                 <th>Username</th>
+                <th>Mail</th>
                 <th>Roles</th>
                 {# <th>Password</th> #}
                 <th>actions</th>
@@ -36,6 +37,7 @@
         {% for admin in admins %}
             <tr>
                 <td>{{ admin.username }}</td>
+                <td>{{ admin.email }}</td>
                 <td>{{ admin.roles ? admin.roles|json_encode : '' }}</td>
                 {# <td>{{ admin.password }}</td> #}
                 <td>
