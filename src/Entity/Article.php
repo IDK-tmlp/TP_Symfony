@@ -38,10 +38,13 @@ class Article
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?Admin $author = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->createdAt = new \DateTimeImmutable();
+        $this->setCreatedAt();
     }
 
     public function getId(): ?int
@@ -148,9 +151,21 @@ class Article
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(): static
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Admin
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Admin $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }

@@ -17,13 +17,13 @@
 				<a href="{{ path('app_category_show', {'id': category.id}) }}" class='text-decoration-none text-uppercase text-dark'>{{ category.title }}</a>
 				<span class="pull-right">{{ category.articles|length~' article'~( category.articles|length > 1 ? 's' : '') }}</span>
 				{% if is_granted('ROLE_ADMIN') %}
-					<a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary">Edit</a>
+					<a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-primary">Modifier</a>
 				{% endif %}
 			</li>
 
 		{% else %}
 			<li class='list-group-item'>
-				<p>No category found</p>
+				<p>Pas de catégories</p>
 			</li>
 		{% endfor %}
 	</div>

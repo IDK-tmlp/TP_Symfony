@@ -11,6 +11,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,37 +32,49 @@ class ArticleController extends AbstractController
             $title_search = $categoryRepository->findOneBy(['title' => $title_search]);
             $paginator = $articleRepository->getArticlePaginator($title_search, $offset);
         }else if($request->request->get('title') !== null) {
-            $names = $articleRepository->findByTitle($request->request->get('title'));
-            var_dump($names);
-            $paginator = $names;
+            $paginator = $articleRepository->findByTitle($request->request->get('title'));
         }else {
             $paginator = $articleRepository->findAll();
         }
+        $free=false;
+        $premium=false;
+        foreach ($paginator as $article) {
+            if ($article->isIsPremium()) {
+                $premium[] = $article;
+            }else{
+                $free[] = $article;
+            }
+        }
 
         return $this->render('article/index.html.twig', [
-            'articles' => $paginator,
+            'free' => $free,
+            'premium' => $premium,
             'title_search' => $title_search,
             'titles' => $titles,
         ]);
     }
 
-    #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, #[Autowire('%photo_dir%')] string $photodir): Response
+    #[Route('/author/new', name: 'app_article_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, #[Autowire('%photo_dir%')] string $photodir, Security $security): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $security->getUser();
+            $user->addArticle($article);
             $entityManager->persist($article);
             $entityManager->flush();
             if ($image = $form['image']->getData()) {
                 $filename=$article->getId().'.'.$image->guessExtension();
                 $image->move($photodir, $filename);
                 $article->setImage($filename);
-                $entityManager->persist($article);
-                $entityManager->flush();
+            }else {
+                $article->setImage('default.png');
             }
+            $entityManager->persist($article);
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -72,14 +85,16 @@ class ArticleController extends AbstractController
         ]);
     }
     
-    #[Route('/new/{id}', name: 'app_article_new_with_id', methods: ['GET', 'POST'])]
-    public function newFromCategory(Request $request, EntityManagerInterface $entityManager, Category $category, #[Autowire('%photo_dir%')] string $photodir): Response
+    #[Route('/author/new/{id}', name: 'app_article_new_with_id', methods: ['GET', 'POST'])]
+    public function newFromCategory(Request $request, EntityManagerInterface $entityManager, Category $category, #[Autowire('%photo_dir%')] string $photodir, Security $security): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleTypeFromCategorie::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $security->getUser();
+            $user->addArticle($article);
             $category->addArticle($article);
             $entityManager->persist($article);
             $entityManager->flush();
@@ -89,7 +104,11 @@ class ArticleController extends AbstractController
                 $article->setImage($filename);
                 $entityManager->persist($article);
                 $entityManager->flush();
+            }else {
+                $article->setImage('default.png');
             }
+            $entityManager->persist($article);
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_category_show',['id' => $category->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -113,7 +132,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+    #[Route('/author/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, EntityManagerInterface $entityManager, #[Autowire('%photo_dir%')] string $photodir): Response
     {
         $form = $this->createForm(ArticleType::class, $article);
@@ -143,7 +162,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
+    #[Route('/author/{id}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
@@ -154,7 +173,7 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/delete/picture/{id}', name: 'app_article_delete_picture', methods: ['GET'])]
+    #[Route('/author/delete/picture/{id}', name: 'app_article_delete_picture', methods: ['GET'])]
     public function deletePicture(Request $request, Article $article, EntityManagerInterface $entityManager, #[Autowire('%photo_dir%')] string $photodir): Response
     {
         // handle delete

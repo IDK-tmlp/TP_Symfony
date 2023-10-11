@@ -84,6 +84,16 @@ class AdminController extends AbstractController
             'form' => $form,
         ]);
     }
+    
+    #[Route('/premium/{id}', name: 'app_admin_premium', methods: ['GET'])]
+    public function setPremium(Admin $admin, EntityManagerInterface $entityManager): Response
+    {
+        $admin->addRole('ROLE_PREMIUM');
+        $entityManager->persist($admin);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+    }
 
     #[Route('/{id}', name: 'app_admin_delete', methods: ['POST'])]
     public function delete(Request $request, Admin $admin, EntityManagerInterface $entityManager): Response

@@ -1,20 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin index{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
     <div class='d-flex justify-content-center gap-4 align-items-center'>
-        <h1>User list</h1>
+        <h1>Liste des utilisateurs</h1>
         <a href="{{ path('app_admin_new') }}" class="btn btn-primary fs-4 pt-0">+</a>
     </div>
 
     <form action='{{ path('app_admin_index')}}' method='POST'>
-		<h4 class="m0">Search a specific roles (or user)</h4>
-		{# Title #}
 		<div class="form-group w-25">
-			<label for="roles" class="">Roles</label>
+			<label for="title" class="h4">Rechercher par role</label>
 			<div class="">
-				<select class="form-control" id="role_search" name="role_search">
+				<select class="form-control" id="role_search" name="role_search" class="form-control">
 					<option {{ (role_search == '' ? 'selected') }}></option>
 					{% for role in roles %}
 					<option {{ (role_search == role ? 'selected') }} value='{{role}}'>{{ role }}</option>
@@ -22,15 +20,12 @@
 				</select>
 			</div>
 		</div>
-		<div>
-			<input type="submit" name="submit" value="Search"/>
-		</div>
+		<input type="submit" name="submit" value="Search" class='my-2'/>
 	</form>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Username</th>
                 <th>Roles</th>
                 {# <th>Password</th> #}
@@ -40,7 +35,6 @@
         <tbody>
         {% for admin in admins %}
             <tr>
-                <td>{{ admin.id }}</td>
                 <td>{{ admin.username }}</td>
                 <td>{{ admin.roles ? admin.roles|json_encode : '' }}</td>
                 {# <td>{{ admin.password }}</td> #}
@@ -51,7 +45,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="3">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

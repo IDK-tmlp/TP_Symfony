@@ -42,7 +42,7 @@ class AdminRepository extends ServiceEntityRepository implements PasswordUpgrade
 
     public function getListRole()
 	{
-		$roles = ['ROLE_USER', 'ROLE_AUTHOR', 'ROLE_PREMIUM', 'ROLE_MODO', 'ROLE_ADMIN'];
+		$roles = ['ROLE_AUTHOR', 'ROLE_PREMIUM', 'ROLE_MODO', 'ROLE_ADMIN'];
 		return $roles;
 	}
 
@@ -61,21 +61,22 @@ class AdminRepository extends ServiceEntityRepository implements PasswordUpgrade
     }
 
     public const PAGINATOR_PER_PAGE = 5;
-    public function getAdminPaginator(?string $role=null, ?string $name=null, int $offset): Paginator
+    public function getAdminPaginator(?string $role=null, ?string $name='', int $offset): Paginator
     {
         $query = $this->createQueryBuilder('c');
         if ($role !=='') {
-            $query->andWhere('c.roles LIKE :role')
-                ->setParameter('role', '%'.$role.'%');
+            $query->andWhere($query->expr()->like('c.roles', ':role'))
+                ->setParameter('role', "%$role%");
         }
-        if ($name!== '') {
-            $query->andWhere('c.username = :name')
-                ->setParameter('name', $name);
-        }
+        // if ($name !== '' ) {
+        //     $query->andWhere('c.username = :name')
+        //         ->setParameter('name', $name);
+        // }
         $query->orderBy('c.username', 'ASC')
                 ->setMaxResults(self::PAGINATOR_PER_PAGE)
                 ->setFirstResult($offset)
                 ->getQuery();
+        // dd($query->getDQL());
         return new Paginator($query);
     }
 

@@ -7,7 +7,7 @@
 		<div class='d-flex justify-content-center gap-4 align-items-center'>
 			<a href="{{ path('app_article_index') }}" class="btn btn-primary"> < </a>
 			<h1>{{ article.title }}</h1>
-			{% if is_granted('ROLE_AUTHOR') %}
+			{% if is_granted('ROLE_AUTHOR') and app.user == article.author %}
 				<a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-primary">Edit</a>
 				{{ include('article/_delete_form.html.twig') }}
 			{% endif %}
@@ -20,6 +20,7 @@
 					<p class='fs-4'>{{ article.text }}</p>
 				</div>
 			</div>
+			<p>Ecrit par {{article.author.username }} le {{article.createdAt|date('d-m-Y')}}</p>
 		</section>
 			<section class='m-2'>
 				<h2>Commentaires</h2>

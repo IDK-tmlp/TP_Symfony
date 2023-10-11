@@ -31,18 +31,29 @@ class ArticleRepository extends ServiceEntityRepository
             $query->andWhere('c.category = :category')
                 ->setParameter('category', $category);
         }
-        $query->orderBy('c.title', 'ASC')
+        $query->orderBy('c.createdAt', 'DESC')
                 ->setMaxResults(self::PAGINATOR_PER_PAGE)
                 ->setFirstResult($offset)
                 ->getQuery();
         return new Paginator($query);
 	}
 
-	public function findByTitle($value): array
+	public function findByTitle($value): Paginator
+    {
+        $query = $this->createQueryBuilder('c');
+        $query->where($query->expr()->like('c.title', ':value'))
+            ->setParameter('value', "%$value%")
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery();
+            return new Paginator($query);
+    }
+
+    public function sortByRecent(): array
     {
         return $this->createQueryBuilder('c')
-            ->where('c.title = :val')
-            ->setParameter('val', "%$value%")
+            ->where('c.isPremium = 0')
+            ->orderBy('c.createdAt', 'DESC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()

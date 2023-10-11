@@ -18,7 +18,7 @@ class HomepageController extends AbstractController
     {
         return $this->render('base.html.twig', [
             'controller_name' => 'HomepageController',
-            'recents' => $articleRepository->findAll(),
+            'recents' => $articleRepository->sortByRecent(),
         ]);
     }
 

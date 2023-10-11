@@ -30,6 +30,17 @@ class Comment
     #[ORM\Column(nullable: true)]
     private ?bool $isValidated = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    private ?Admin $author = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    public function __construct()
+    {
+        $this->setCreatedAt();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -101,6 +112,30 @@ class Comment
     public function setIsValidated(?bool $isValidated): static
     {
         $this->isValidated = $isValidated;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Admin
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Admin $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): static
+    {
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
