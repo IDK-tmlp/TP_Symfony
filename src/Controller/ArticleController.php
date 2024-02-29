@@ -24,15 +24,13 @@ class ArticleController extends AbstractController
     #[Route('/', name: 'app_article_index', methods: ['GET', 'POST'])]
     public function index(ArticleRepository $articleRepository, CategoryRepository $categoryRepository, Request $request): Response
     {
-        $titles = $categoryRepository->getListTitle();
+$titles = $categoryRepository->getListTitle();
         $title_search = '';
         $offset = max(0, $request->query->getInt('offset', 0));
         if ( $request->request->get('title_search') !== null ) {
             $title_search = $request->request->get('title_search');
             $title_search = $categoryRepository->findOneBy(['title' => $title_search]);
             $paginator = $articleRepository->getArticlePaginator($title_search, $offset);
-        }else if($request->request->get('title') !== null) {
-            $paginator = $articleRepository->findByTitle($request->request->get('title'));
         }else {
             $paginator = $articleRepository->findAll();
         }
